@@ -1,0 +1,151 @@
+﻿@model IEnumerable<LapZone.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["ShowButtons"] = true;
+}
+
+<p>
+    <h1>Products Of List</h1>
+
+    <a asp-action="Create"><h3>Create New Product</h3></a>
+</p>
+@*
+<form method="get" asp-controller="YourController" asp-action="Index">
+    <div class="input-group md-form form-sm form-2 pl-0">
+        <input asp-for="SearchTerm" class="form-control" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="input-group-append">
+                <span class="input-group-text red lighten-3" id="basic-texti">
+                    <i class="fas fa-search text-grey" aria-hidden="true"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(ViewData["SearchTerm"] as string))
+{
+    <p>Search results for: <strong>@ViewData["SearchTerm"]</strong></p>
+}
+
+<table class="table">
+    <!-- Rest of your table rendering code -->
+</table>
+
+@section scripts {
+    <script>
+        $(function () {
+            $("#basic-texti").click(function () {
+                $("form").submit();
+            });
+        });
+    </script>
+}*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StockQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CPU)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Storage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RAM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GPU)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScreenSize)
+            </th>
+            @* <th>
+            @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.HasWebcam)
+            </th>*@
+            @* <th>
+            @Html.DisplayNameFor(model => model.Category)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StockQuantity)
+                </td>
+                <td>
+                    @*                @Html.DisplayFor(modelItem => item.ImagePath)
+                *@            <img src="Images1/@item.ImagePath" style="width:60px;height">
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CPU)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Storage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RAM)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GPU)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScreenSize)
+                </td>
+                @* <td>
+            @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.HasWebcam)
+            </td>*@
+                @*   <td>
+            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>*@
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

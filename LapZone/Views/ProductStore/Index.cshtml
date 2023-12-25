@@ -1,0 +1,225 @@
+﻿@* Store *@
+
+@model dynamic
+@{
+    int? userId = null;
+
+    if (Context.Request.Cookies.ContainsKey(".AspNetCore.Session"))
+    {
+        userId = Context.Session.GetInt32("UserId");
+
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Store</title>
+    <style>
+
+        .filterAndSort {
+            background-color:#1e1f29;
+            border:none;
+            font-weight:500;
+            color:#fff;
+            border-radius:4px;
+            position: absolute;
+            padding:8px;
+            top: -15px;
+            right: 70px;
+        }
+
+        .filterAndSort:hover {
+                background-color: #d10024;
+            
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- ASIDE -->
+                <div id="aside" class="col-md-3">
+
+                    <form method="get" action="@Url.Action("FilterAndSort", "ProductStore")">
+                        <!-- store top filter -->
+                        <div class="store-filter clearfix">
+                            <div style="margin-top:30px;" class="store-sort">
+                                <label>
+                                    <b>
+                                        Sort By:
+                                    </b>
+                                    <select name="sortBy" class="input-select">
+                                        <option value="0">Popular</option>
+                                        <option value="1">Price</option>
+                                        <option value="2">Name</option>
+                                    </select>
+                                </label>
+
+                                <label>
+                                    High to low <i class="bi bi-arrow-down"></i>
+                                    <input style="margin-top:px;" type="checkbox" name="sortDesc">
+                                </label>
+                              
+                            </div>
+                        </div>
+                        <!-- /store top filter -->
+                        <!-- aside Widget -->
+                        <div class="aside">
+                            <h3 style="margin-bottom:5px;margin-top:30px;" class="aside-title">Price</h3>
+                            <div class="price-filter">
+                                <div class="price-slider-container">
+                                    <div class="input-number price-min">
+                                        <input name="minprice" id="new-price-min" type="number" placeholder="Min">
+                                    </div>
+                                    <span>:</span>
+                                    <div class="input-number price-max">
+                                        <input name="maxprice" id="new-price-max" type="number" placeholder="Max" max="<!-- Maximum Product Price -->">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /aside Widget -->
+                        <!-- aside Widget -->
+                        <div class="aside">
+                            <h3 class="aside-title">Categories</h3>
+                            <div class="checkbox-filter">
+                                @foreach (var cat in Model.Categories)
+                                {
+                                    <div class="input-checkbox">
+                                        <input type="checkbox" id="category-@cat.CategoryId" name="categoriesId" class="category-checkbox" data-category="@cat.CategoryName" value="@cat.CategoryId">
+                                        <label for="category-@cat.CategoryId">
+                                            <span></span>
+                                            @cat.CategoryName
+                                            <small>(@cat.Products.Count) products</small>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <!-- /aside Widget -->
+                        <button type="submit" class="filterAndSort">Click to Apply filters and sort</button>
+                    </form>
+                </div>
+                <!-- /ASIDE -->
+                <!-- STORE -->
+                <div id="store" class="col-md-9">
+                    <!-- store products -->
+                    <h2></h2>
+
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="col-md-4 col-xs-6">
+                            <div class="product">
+                                <div class="product-img">
+                                    <img src="~/Images/Products/@product.ImagePath" alt="" />
+
+                                </div>
+                                <div class="product-body">
+                                    <p class="product-category">@product.Category.CategoryName</p>
+
+                                    <h3 class="product-name">
+                                        <a asp-controller="ProductDetails" asp-action="Index" asp-route-id="@product.ProductId">@product.ProductName</a>
+                                    </h3>
+                                    <h4 class="product-price">@product.Price</h4>
+
+                                    @if (!Model.InWishList.Contains(product.ProductId))
+                                    {
+                                        <!-- Product is not in the wishlist -->
+                                        <form id="addToWishlistForm_@product.ProductId" asp-controller="Wishlist" asp-action="AddToWishlist" method="post">
+                                            <input type="hidden" name="productId" value="@product.ProductId" />
+                                            <input type="hidden" name="sourcePage" value="Store" />
+
+                                            <div class="product-btns">
+                                                <button type="button" class="add-to-wishlist" onclick="toggleWishlist(@product.ProductId, false)">
+                                                    <i class="fa fa-heart-o"></i><span class="tooltipp">Add to wishlist</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <!-- Product is in the wishlist -->
+                                        <form id="removeFromWishlistForm_@product.ProductId" asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post">
+                                            <input type="hidden" name="productId" value="@product.ProductId" />
+                                            <input type="hidden" name="sourcePage" value="Store" />
+
+                                            <div class="product-btns">
+                                                <button type="button" class="add-to-wishlist" onclick="toggleWishlist(@product.ProductId, true)">
+                                                    <i style="color:#d10024" class="fa fa-heart"></i><span class="tooltipp">Remove from wishlist</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                                @if (product.StockQuantity > 0)
+                                {
+                                    <form asp-controller="Cart" asp-action="AddToCart" method="post" onsubmit="return addToCart(event)">
+                                        <input type="hidden" name="productId" value="@product.ProductId" />
+                                        <div class="add-to-cart">
+                                            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                        </div>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <div class="add-to-cart">
+                                        <i style="color:white">out of stock <i class="bi bi-emoji-frown"></i></i>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                </div>
+                <!-- /STORE -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+    <script>
+
+        function toggleWishlist(productId, isInWishlist) {
+            var isAuthenticated = @(userId != null ? "true" : "false");
+
+            if (!isAuthenticated) {
+                alert('Please login first.');
+                event.preventDefault(); // Prevent the form submission
+                return;
+            }
+
+            if (isInWishlist) {
+                // Product is in the wishlist, remove it
+                document.getElementById('removeFromWishlistForm_' + productId).submit();
+            } else {
+                // Product is not in the wishlist, add it
+                document.getElementById('addToWishlistForm_' + productId).submit();
+            }
+        }
+
+
+        function addToCart(event) {
+            // Check if the user is authenticated
+            var isAuthenticated = @(userId != null ? "true" : "false");
+
+            if (!isAuthenticated) {
+                alert('Please login first.');
+                event.preventDefault(); // Prevent the form submission
+                return false; // Prevent form submission
+            }
+            return true;
+        }
+
+    </script>
+
+</body>
+</html>
+
+

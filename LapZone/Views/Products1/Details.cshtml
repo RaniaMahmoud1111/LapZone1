@@ -1,0 +1,118 @@
+﻿@model LapZone.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details Product</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+
+        @* <dt>
+        @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+        <dd>
+        @Html.DisplayFor(model => model.ImagePath)
+        </dd>*@
+        <dt>
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </dt>
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="~/Images1/@Model.ImagePath" alt="Product Image" style="max-width: 100%;" />
+            }
+            else
+            {
+                <span>No image available</span>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StockQuantity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StockQuantity)
+        </dd>
+     
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Brand)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CPU)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CPU)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Storage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Storage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RAM)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RAM)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GPU)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GPU)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ScreenSize)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ScreenSize)
+        </dd>
+       @* <dt>
+            @Html.DisplayNameFor(model => model.Weight)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Weight)
+        </dd>*@
+      @*  <dt>
+            @Html.DisplayNameFor(model => model.HasWebcam)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HasWebcam)
+        </dd>*@
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category.CategoryName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
